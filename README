@@ -1,0 +1,27 @@
+This is Perl module Test::Groonga::Httpd.
+
+INSTALLATION
+
+Test::Groonga::Httpd installation is straightforward. If your CPAN shell is set up,
+you should just be able to do
+
+    % cpan Test::Groonga::Httpd
+
+Download it, unpack it, then build it as per the usual:
+
+    % perl Makefile.PL
+    % make && make test
+
+Then install it:
+
+    % make install
+
+DOCUMENTATION
+
+Test::Groonga::Httpd documentation is available as in POD. So you can do:
+
+    % perldoc Test::Groonga::Httpd
+
+to read the documentation online with your favorite pager.
+
+okamuuu

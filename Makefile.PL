@@ -1,0 +1,17 @@
+use inc::Module::Install;
+name 'Test-Groonga-Httpd';
+all_from 'lib/Test/Groonga/Httpd.pm';
+
+# requires '';
+
+tests 't/*.t';
+author_tests 'xt';
+
+requires 'Class::Acessor::Lite';
+
+test_requires 'Test::More';
+test_requires 'Test::Exception';
+test_requires 'LWP::Simple';
+auto_set_repository;
+auto_include;
+WriteAll;
