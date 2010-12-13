@@ -1,27 +1,21 @@
-This is Perl module Test::Groonga::Httpd.
+NAME
 
-INSTALLATION
+    Test::Groonga - Test::Groonga provides you temporary groonga server daemon. 
 
-Test::Groonga::Httpd installation is straightforward. If your CPAN shell is set up,
-you should just be able to do
+SYNOPSIS
 
-    % cpan Test::Groonga::Httpd
+   use Test::Groonga;
+  
+   my $groonga = Test::Groonga->new();
+   
+   $groonga->start;
+   $groonga->stop;
+ 
+AUTHOR
 
-Download it, unpack it, then build it as per the usual:
+    Okamura <okamuuu at gmail dot com>
 
-    % perl Makefile.PL
-    % make && make test
+LICENSE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 
-Then install it:
-
-    % make install
-
-DOCUMENTATION
-
-Test::Groonga::Httpd documentation is available as in POD. So you can do:
-
-    % perldoc Test::Groonga::Httpd
-
-to read the documentation online with your favorite pager.
-
-okamuuu
