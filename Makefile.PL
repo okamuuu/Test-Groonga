@@ -7,7 +7,7 @@ all_from 'lib/Test/Groonga/Httpd.pm';
 tests 't/*.t';
 author_tests 'xt';
 
-requires 'Class::Acessor::Lite';
+requires 'Class::Acessor::Lite' => 0.04;
 
 test_requires 'Test::More';
 test_requires 'Test::Exception';
