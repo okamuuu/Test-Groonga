@@ -4,12 +4,6 @@ use Carp ();
 use Test::More;
 use Test::Exception;
 
-### TODO: Where is the BEST PRACTICE How to do this
-if ( $Class::Accessor::Lite::VERSION < 0.04 ) {
-    Carp::croak "Test::Groonga use read-only accessor "
-      . "via Class::Accessor::Lite newer than version 0.04 ...";
-}
-
 BEGIN { use_ok 'Test::Groonga' }
 
 subtest 'test groonga utility CLASS METHODS.' => sub {
