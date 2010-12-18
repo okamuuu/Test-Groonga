@@ -3,22 +3,24 @@ use strict;
 use warnings;
 use File::Spec ();
 use File::Temp ();
-use IO::Socket::INET;
 use Time::HiRes ();
-use Class::Accessor::Lite ( 
-    ro => [qw/host protocol temp_db/],
-    rw => [qw/port/]
-);
+use IO::Socket::INET;
 
-our $VERSION = '0.01';
+use Class::Accessor::Lite 0.05 ( ro => [qw/bin port host protocol temp_db/] );
+
+our $VERSION = '0.02';
 
 sub new {
     my $class = shift;
     my %args = @_ == 1 ? %{ $_[0] } : @_;
 
+    my $bin = $class->which_groonga_cmd;
+    Carp::croak("not found cmd 'groonga'...") unless $bin;
+    
     bless {
+        bin      => $bin,
         host     => 'localhost',
-        protocol => $args{protocol} || undef,
+        protocol => $args{protocol} || 'gqtp',
         temp_db  => File::Spec->catfile(
             File::Temp::tempdir( CLEANUP => 1 ),
             'test.groonga.db'
@@ -31,20 +33,17 @@ sub start {
 
     Carp::croak('Already running...') if $self->is_running;
 
-    my $groonga_cmd = $self->which_groonga_cmd;
+    my $groonga_cmd = $self->bin;
     my $host        = $self->host; 
+    my $protocol    = $self->protocol; 
     my $temp_db     = $self->temp_db;
 
     my $port = $self->get_empty_port();
-    $self->port($port);
+    $self->{port} = $port;
 
-    my $cmd =
-      ( $self->protocol and $self->protocol eq 'http' )
-      ? "$groonga_cmd -p $port --protocol http -d -n $temp_db 2> /dev/null"
-      : "$groonga_cmd -p $port                 -d -n $temp_db 2> /dev/null";
+    system("$groonga_cmd -p $port --protocol $protocol -d -n $temp_db 2> /dev/null");
 
-    system($cmd);
-
+    ### wait for port open
     for ( 0 .. 100 ) {
         return if $self->is_running;
         Time::HiRes::sleep(0.1);
@@ -58,10 +57,10 @@ sub is_running {
 
     my $port = $self->port or return 0;
 
-    my $groonga_cmd = $self->which_groonga_cmd;
+    my $groonga_cmd = $self->bin;
     my $host        = $self->host;
 
-    if ( $self->protocol and $self->protocol eq 'http' ) {
+    if ( $self->protocol eq 'http' ) {
         require LWP::Simple;
         ### XXX: LWP::Simple::head is balkiness :( 
         my $content = LWP::Simple::get("http://localhost:$port/d/status");
@@ -77,12 +76,12 @@ sub is_running {
 sub stop {
     my $self = shift;
 
-    my $groonga_cmd = $self->which_groonga_cmd;
+    my $groonga_cmd = $self->bin;
     my $port        = $self->port;
     my $temp_db     = $self->temp_db;
     my $host        = $self->host;
     
-    if ( $self->protocol and $self->protocol eq 'http' ) {
+    if ( $self->protocol eq 'http' ) {
         my $content = LWP::Simple::get("http://localhost:$port/d/shutdown");
         die "failed to shutdowon groonga daemon..." unless $content;
     }
