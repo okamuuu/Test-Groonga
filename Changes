@@ -1,4 +1,7 @@
 Revision history for Perl extension Test::Groonga::Httpd
 
-0.01    Thu Dec  9 22:26:51 2010
+0.02    2010-12-18
+        - refactoring
+
+0.01    2010-12-09
         - original version
