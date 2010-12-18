@@ -1,6 +1,6 @@
 use inc::Module::Install;
-name 'Test-Groonga-Httpd';
-all_from 'lib/Test/Groonga/Httpd.pm';
+name 'Test-Groonga';
+all_from 'lib/Test/Groonga';
 
 # requires '';
 
