@@ -15,8 +15,10 @@ sub new {
     my %args = @_ == 1 ? %{ $_[0] } : @_;
 
     my $bin = $class->which_groonga_cmd;
+
     Carp::croak("not found cmd 'groonga'...") unless $bin;
-    
+    Carp::croak("Cannot implement 'groonga'...") unless $class->can_groonga_cmd;
+
     bless {
         bin      => $bin,
         host     => 'localhost',
@@ -55,14 +57,15 @@ sub start {
 sub is_running {
     my $self = shift;
 
-    my $port = $self->port or return 0;
+    my $port = $self->port;
+    
+    return unless $port;
 
     my $groonga_cmd = $self->bin;
     my $host        = $self->host;
 
     if ( $self->protocol eq 'http' ) {
         require LWP::Simple;
-        ### XXX: LWP::Simple::head is balkiness :( 
         my $content = LWP::Simple::get("http://localhost:$port/d/status");
         return $content ? 1 : 0;
     }
@@ -102,8 +105,6 @@ sub which_groonga_cmd {
 }
 
 sub get_empty_port {
-    my $self = shift;
-
     my $port = 19000; 
     my $sock;
     while ( $port++ < 20000 ) {
@@ -121,10 +122,7 @@ sub get_empty_port {
     return $port;
 }
 
-sub DESTROY {
-    my $self = shift;
-    $self->stop if $self->is_running;
-}
+sub DESTROY { $_[0]->stop if $_[0]->is_running; }
 
 1;
 
