@@ -148,6 +148,24 @@ Test::Groonga provides you temporary groonga server daemon.
 I also shamelessly stole from Test::Memcached.
 So this interface similar to it.
 
+=head1 METHODS
+
+=head2 new
+
+=head2 start
+
+=head2 is_running
+
+=head2 stop
+
+=head2 can_groonga_cmd
+
+=head2 which_groonga_cmd
+
+=head2 get_empty_port
+
+=head2 DESTROY 
+
 =head1 AUTHOR
 
 Okamura. 

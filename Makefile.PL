@@ -1,13 +1,11 @@
 use inc::Module::Install;
 name 'Test-Groonga';
-all_from 'lib/Test/Groonga';
-
-# requires '';
+all_from 'lib/Test/Groonga.pm';
 
 tests 't/*.t';
 author_tests 'xt';
 
-requires 'Class::Acessor::Lite' => 0.05;
+requires 'Class::Accessor::Lite' => 0.05;
 requires 'File::Spec';
 requires 'File::Temp';
 requires 'Time::HiRes';
