@@ -1,15 +1,23 @@
 NAME
 
-    Test::Groonga - Test::Groonga provides you temporary groonga server daemon. 
+    Test::Groonga - Test::Groonga provides you temporary groonga server. 
 
 SYNOPSIS
 
-   use Test::Groonga;
-  
-   my $groonga = Test::Groonga->new();
-   
-   $groonga->start;
-   $groonga->stop;
+    use Test::Groonga;
+
+    {  
+        my $server = Test::Groonga->gqtp;
+        # testing
+        $server->stop; 
+    }
+
+    {  
+        my $server = Test::Groonga->http;
+        # testing
+        $server->stop; 
+    }
+
  
 AUTHOR
 

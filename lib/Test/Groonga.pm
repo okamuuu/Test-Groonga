@@ -43,41 +43,35 @@ __END__
 
 =head1 NAME
 
-Test::Groonga -  Groonga Runner For Tests
+Test::Groonga -  Server Runner For Testing Groonga full-text search engine
 
 =head1 SYNOPSIS
 
-  use Test::Groonga;
- 
-  my $groonga = Test::Groonga->new();
-  
-  $groonga->start;
-  $groonga->stop;
+    use Test::Groonga;
+
+    {
+        my $server = Test::Groonga->gqtp();
+        # testing
+    }
+
+    {
+        my $server = Test::Groonga->http();
+        # testing
+    }
 
 =head1 DESCRIPTION
 
-Test::Groonga provides you temporary groonga server daemon.
-
-I also shamelessly stole from Test::Memcached.
-So this interface similar to it.
+Test::Groonga provides you temporary groonga server.
 
 =head1 METHODS
 
-=head2 new
+=head2 gqtp
 
-=head2 start
+return Test::TCP instance as groonga server.
 
-=head2 is_running
+=head2 http
 
-=head2 stop
-
-=head2 can_groonga_cmd
-
-=head2 which_groonga_cmd
-
-=head2 get_empty_port
-
-=head2 DESTROY 
+return Test::TCP instance as groonga server. 
 
 =head1 AUTHOR
 
