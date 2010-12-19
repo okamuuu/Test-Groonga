@@ -5,7 +5,6 @@ use File::Spec ();
 use File::Temp ();
 use File::Which ();
 use Test::TCP 1.10;
-use Class::Accessor::Lite 0.05 ( ro => [qw/bin port host protocol temp_db/] );
 
 our $VERSION = '0.03';
 
@@ -16,23 +15,27 @@ sub http { _get_test_tcp('http') }
 sub _get_test_tcp {
     my $protocol = shift;
  
-    my $bin = scalar File::Which::which('groonga');
+    my $bin = _find_groonga_bin();
     Carp::croak('groonga binary is not found') unless $bin;
 
+    ### groonga create some shard files. 
+    ### ex. tmp/test.groonga.db, tmp/test.groonga.db.0000000, ...
     my $db = File::Spec->catfile( File::Temp::tempdir( CLEANUP => 1 ),
         'test.groonga.db' );
 
-    my $server = Test::TCP->new(
+    return my $server = Test::TCP->new(
         code => sub {
             my $port = shift;
 
             # -s : server mode
-            # -n : create new database
+            # -n : create a new database
             exec $bin, '-s', '--port', $port, '--protocol', $protocol, '-n', $db;
             die "cannot execute $bin: $!";
         },  
     ); 
 }
+
+sub _find_groonga_bin { scalar File::Which::which('groonga'); }
 
 1;
 

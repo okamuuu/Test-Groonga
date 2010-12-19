@@ -5,15 +5,14 @@ all_from 'lib/Test/Groonga.pm';
 tests 't/*.t';
 author_tests 'xt';
 
-requires 'Class::Accessor::Lite' => 0.05;
 requires 'File::Spec';
 requires 'File::Temp';
-requires 'Time::HiRes';
-requires 'IO::Socket::INET';
+requires 'File::Which';
+requires 'Test::TCP';
 
 test_requires 'Test::More';
 test_requires 'Test::Exception';
-test_requires 'LWP::Simple';
+test_requires 'LWP::UserAgent';
 auto_set_repository;
 auto_include;
 WriteAll;
