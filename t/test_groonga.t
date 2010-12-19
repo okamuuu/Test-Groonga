@@ -3,49 +3,28 @@ use warnings;
 use Carp ();
 use Test::More;
 use Test::Exception;
-
+use Data::Dumper;
 BEGIN { use_ok 'Test::Groonga' }
 
-subtest 'test groonga utility CLASS METHODS.' => sub {
+my $bin = scalar File::Which::which('groonga');
+plan skip_all => 'groonga binary is not found' unless defined $bin;
 
-    my $path = Test::Groonga->which_groonga_cmd;
-    ok( $path, "I find groonga command: $path" );
-
-    ok( Test::Groonga->can_groonga_cmd,
-        'And it is executable.' );
-    
-    my $port = Test::Groonga->get_empty_port;
-    ok $port, "get empty port ok: $port";
+subtest 'get test tcp instance as groonga server in gqtp mode' => sub {
+    my $server;
+    lives_ok { $server = Test::Groonga->gqtp } "create Test::TCP instance.";
+    ok $server->port, "port: @{[ $server->port ]}";
+    ok $server->pid,  "pid:  @{[ $server->pid  ]}";
+    lives_ok { $server->stop  } 'stop server.';
+    ok ! $server->pid, "As a result, this instacne has no pid.";
 };
 
-subtest 'create instance.' => sub {
-
-    my $groonga = Test::Groonga->new();
-    isa_ok( $groonga, "Test::Groonga" );
-
-    ok ! $groonga->port,  "Still not set port.";
-    ok $groonga->temp_db, "This instance has temporary file: @{[$groonga->temp_db]}";
-    
-    ok ! $groonga->is_running;
-    lives_ok { $groonga->start } 'start groonga daemon.';
-    ok $groonga->is_running;
-    lives_ok { $groonga->stop  } 'stop groonga daemon.';
-    ok ! $groonga->is_running;
-};
-
-subtest 'create instance as httpd.' => sub {
-
-    my $groonga = Test::Groonga->new(protocol => 'http');
-    isa_ok( $groonga, "Test::Groonga" );
-
-    ok ! $groonga->port,  "Still not set port.";
-    ok $groonga->temp_db, "This instance has temporary file: @{[$groonga->temp_db]}";
-    
-    ok ! $groonga->is_running;
-    lives_ok { $groonga->start } 'start groonga daemon.';
-    ok $groonga->is_running;
-    lives_ok { $groonga->stop  } 'stop groonga daemon.';
-    ok ! $groonga->is_running;
+subtest 'get test tcp instance as groonga server in http mode' => sub {
+    my $server;
+    lives_ok { $server = Test::Groonga->http } "create Test::TCP instance.";
+    ok $server->port, "port: @{[ $server->port ]}";
+    ok $server->pid,  "pid:  @{[ $server->pid  ]}";
+    lives_ok { $server->stop  } 'stop server.';
+    ok ! $server->pid, "As a result, this instacne has no pid.";
 };
 
 
