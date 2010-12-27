@@ -6,7 +6,7 @@ use File::Temp ();
 use File::Which ();
 use Test::TCP 1.10;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub gqtp { _get_test_tcp('gqtp') }
 
