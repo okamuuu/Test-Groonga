@@ -8,5 +8,4 @@ MANIFEST
 Makefile.old
 nytprof.out
 MANIFEST.bak
-MANIFEST.SKIP
 *.sw[po]
