@@ -7,6 +7,8 @@ requires 'File::Temp';
 requires 'File::Which';
 requires 'Test::TCP';
 
+test_requires 'File::Temp';
+test_requires 'Path::Class';
 test_requires 'Test::More';
 test_requires 'Test::Exception';
 test_requires 'LWP::UserAgent';
