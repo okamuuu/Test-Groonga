@@ -12,7 +12,7 @@ sub create {
     my $class = shift;
     my %args = @_ == 1 ? %{ $_[0] } : @_;
 
-    my $protocol = $args{http} ? 'http' ? 'gqtp';
+    my $protocol = $args{http} ? 'http' : 'gqtp';
     my $preload = $args{preload};
 
     $class->_get_test_tcp( %args, protocol => 'gqtp' );
