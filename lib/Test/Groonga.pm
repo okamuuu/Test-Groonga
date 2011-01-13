@@ -8,6 +8,16 @@ use Test::TCP 1.10;
 
 our $VERSION = '0.04';
 
+sub create {
+    my $class = shift;
+    my %args = @_ == 1 ? %{ $_[0] } : @_;
+
+    my $protocol = $args{http} ? 'http' ? 'gqtp';
+    my $preload = $args{preload};
+
+    $class->_get_test_tcp( %args, protocol => 'gqtp' );
+}
+
 sub gqtp {
     my $class  = shift;
     my %args   = @_ == 1 ? %{ $_[0] } : @_;
