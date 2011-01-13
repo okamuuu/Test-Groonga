@@ -21,12 +21,18 @@ sub create {
 sub gqtp {
     my $class  = shift;
     my %args   = @_ == 1 ? %{ $_[0] } : @_;
+    
+    warn 'deprecated..';
+    
     $class->_get_test_tcp( %args, protocol => 'gqtp');
 }
 
 sub http {
     my $class  = shift;
     my %args   = @_ == 1 ? %{ $_[0] } : @_;
+    
+    warn 'deprecated..';
+    
     $class->_get_test_tcp( %args, protocol => 'http');
 }
 
