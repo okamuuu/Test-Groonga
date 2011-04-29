@@ -6,19 +6,21 @@ SYNOPSIS
 
     use Test::Groonga;
 
-    {  
-        my $server = Test::Groonga->gqtp;
+    {
+        my $server = Test::Groonga->create(protocol=>'http');
         # testing
-        $server->stop; 
     }
 
-    {  
-        my $server = Test::Groonga->http;
+    {
+        my $server = Test::Groonga->create(protocol=>'gqtp');
         # testing
-        $server->stop; 
     }
 
- 
+    {
+        my $server = Test::Groonga->create(protocol=>'http', preload => 'foo.grn');
+        # testing
+    }
+
 AUTHOR
 
     Okamura <okamuuu at gmail dot com>
