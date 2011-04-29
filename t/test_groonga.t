@@ -15,10 +15,10 @@ subtest 'get test tcp instance as groonga server' => sub {
 
     plan skip_all => 'groonga binary is not found' unless defined $bin;
 
-    subtest 'in gqtp mode' => sub {
+    subtest 'gqtp mode' => sub {
 
         my $server;
-        lives_ok { $server = Test::Groonga->gqtp } "create Test::TCP instance.";
+        lives_ok { $server = Test::Groonga->create(protocol => 'gqtp') } "create Test::TCP instance.";
 
         my $port = $server->port;
         ok $port, "port: $port";
@@ -29,10 +29,10 @@ subtest 'get test tcp instance as groonga server' => sub {
         $server->stop;
     };
 
-    subtest 'in http mode' => sub {
+    subtest 'http mode' => sub {
 
         my $server;
-        lives_ok { $server = Test::Groonga->http } "create Test::TCP instance.";
+        lives_ok { $server = Test::Groonga->create( protocol => 'http') } "create Test::TCP instance.";
 
         my $port = $server->port;
         ok $port, "port: $port";

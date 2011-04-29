@@ -12,9 +12,14 @@ sub create {
     my $class = shift;
     my %args = @_ == 1 ? %{ $_[0] } : @_;
 
-    my $protocol = $args{http} ? 'http' : 'gqtp';
-    my $preload = $args{preload} || undef;
+    my $protocol = delete $args{protocol}
+      or Carp::croak("Missing params 'protocol'");
+ 
+    $protocol =~ m/(?:gqtp|http)/
+      or Carp::croak('protocol must be gqtp or http');
 
+    my $preload = delete $args{preload} || undef;
+    
     $class->_get_test_tcp( protocol => $protocol, preload => $preload );
 }
 
