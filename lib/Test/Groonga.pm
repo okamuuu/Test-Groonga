@@ -13,9 +13,9 @@ sub create {
     my %args = @_ == 1 ? %{ $_[0] } : @_;
 
     my $protocol = $args{http} ? 'http' : 'gqtp';
-    my $preload = $args{preload};
+    my $preload = $args{preload} || undef;
 
-    $class->_get_test_tcp( %args, protocol => 'gqtp' );
+    $class->_get_test_tcp( protocol => $protocol, preload => $preload );
 }
 
 sub gqtp {
@@ -90,12 +90,17 @@ Test::Groonga -  Server Runner For Testing Groonga full-text search engine
     use Test::Groonga;
 
     {
-        my $server = Test::Groonga->gqtp();
+        my $server = Test::Groonga->create(protocol=>'http');
         # testing
     }
 
     {
-        my $server = Test::Groonga->http();
+        my $server = Test::Groonga->create(protocol=>'gqtp');
+        # testing
+    }
+
+    {
+        my $server = Test::Groonga->create(protocol=>'http', preload => 'foo.grn');
         # testing
     }
 
@@ -105,17 +110,13 @@ Test::Groonga provides you temporary groonga server.
 
 =head1 METHODS
 
-=head2 gqtp
+=head2 create
 
 return Test::TCP instance as groonga server.
 
-=head2 http
-
-return Test::TCP instance as groonga server. 
-
 =head1 AUTHOR
 
-Okamura. 
+Okamura
 
 =head1 LICENSE
 
