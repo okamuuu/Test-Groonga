@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Groonga
 
+0.05    2011-06-08
+        - copied after Perl Best Practice.
+
 0.04    2010-12-27
         - add function to load dump file before testing.
 
