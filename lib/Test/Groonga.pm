@@ -65,7 +65,7 @@ sub _get_test_tcp {
         code => sub {
             my $port = shift;
 
-            my $result = `$bin -n $db < $preload` if $preload;
+            `$bin -n $db < $preload` if $preload;
             
             # -s : server mode
             # -n : create a new db
@@ -88,7 +88,7 @@ __END__
 
 =head1 NAME
 
-Test::Groonga -  Server Runner For Testing Groonga full-text search engine
+Test::Groonga - Server runner for testing Groonga full-text search engine
 
 =head1 SYNOPSIS
 
@@ -118,6 +118,14 @@ Test::Groonga provides you temporary groonga server.
 =head2 create
 
 return Test::TCP instance as groonga server.
+
+=head2 gqtp
+
+=head2 http
+
+=head2 _get_test_tcp
+
+=head2 _find_groonga_bin
 
 =head1 AUTHOR
 
