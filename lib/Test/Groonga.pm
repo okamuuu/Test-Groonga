@@ -6,7 +6,7 @@ use File::Temp ();
 use File::Which ();
 use Test::TCP 1.10;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub create {
     my $class = shift;
