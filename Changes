@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Groonga
 
+0.06    2011-11-22
+        - added construction params 'default_command_version'.
+
 0.05    2011-06-08
         - copied after Perl Best Practice.
 

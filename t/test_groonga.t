@@ -10,6 +10,7 @@ use LWP::UserAgent;
 BEGIN { use_ok 'Test::Groonga' }
 
 my $bin = Test::Groonga::_find_groonga_bin();
+my $cmd_version = 1;
 
 subtest 'get test tcp instance as groonga server' => sub {
 
@@ -18,7 +19,7 @@ subtest 'get test tcp instance as groonga server' => sub {
     subtest 'gqtp mode' => sub {
 
         my $server;
-        lives_ok { $server = Test::Groonga->create(protocol => 'gqtp') } "create Test::TCP instance.";
+        lives_ok { $server = Test::Groonga->create(protocol => 'gqtp', default_command_version => $cmd_version) } "create Test::TCP instance.";
 
         my $port = $server->port;
         ok $port, "port: $port";
@@ -32,7 +33,7 @@ subtest 'get test tcp instance as groonga server' => sub {
     subtest 'http mode' => sub {
 
         my $server;
-        lives_ok { $server = Test::Groonga->create( protocol => 'http') } "create Test::TCP instance.";
+        lives_ok { $server = Test::Groonga->create( protocol => 'http', default_command_version=>$cmd_version) } "create Test::TCP instance.";
 
         my $port = $server->port;
         ok $port, "port: $port";
@@ -56,7 +57,7 @@ subtest 'providing groonga db prepared schema' => sub {
 
         my $server;
         lives_ok {
-            $server = Test::Groonga->gqtp( preload => $schema_file->stringify );
+            $server = Test::Groonga->create( protocol => 'gqtp', 'default_command_version' => $cmd_version, preload => $schema_file->stringify );
         };
 
         my $port = $server->port;
@@ -71,7 +72,7 @@ subtest 'providing groonga db prepared schema' => sub {
 
         my $server;
         lives_ok {
-            $server = Test::Groonga->http( preload => $schema_file->stringify );
+            $server = Test::Groonga->create( protocol => 'http', 'default_command_version' => $cmd_version, preload => $schema_file->stringify );
         };
 
         my $port = $server->port;

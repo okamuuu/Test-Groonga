@@ -11,6 +11,9 @@ our $VERSION = '0.05';
 sub create {
     my $class = shift;
     my %args = @_ == 1 ? %{ $_[0] } : @_;
+    
+    my $command_version = delete $args{default_command_version} 
+      or Carp::croak("Missing params 'default_command_version'");
 
     my $protocol = delete $args{protocol}
       or Carp::croak("Missing params 'protocol'");
@@ -19,8 +22,13 @@ sub create {
       or Carp::croak('protocol must be gqtp or http');
 
     my $preload = delete $args{preload} || undef;
-    
-    $class->_get_test_tcp( protocol => $protocol, preload => $preload );
+
+    $class->_get_test_tcp(
+        protocol                => $protocol,
+        preload                 => $preload,
+        default_command_version => $command_version,
+    );
+
 }
 
 sub gqtp {
@@ -46,6 +54,7 @@ sub _get_test_tcp {
     
     my $preload  = $args{preload} || undef;
     my $protocol = $args{protocol} or die;
+    my $cmd_version = $args{default_command_version} or die;
  
     ### load data from dump file if you specified it.
     if ($preload and not -e $preload) {
@@ -64,15 +73,18 @@ sub _get_test_tcp {
     return my $server = Test::TCP->new(
         code => sub {
             my $port = shift;
-
-            `$bin -n $db < $preload` if $preload;
+            
+            `$bin --default-command-version $cmd_version -n $db < $preload` if $preload;
             
             # -s : server mode
             # -n : create a new db
-            my @cmd =
-              $preload
-              ? ( $bin, '-s', '--port', $port, '--protocol', $protocol, $db )
-              : ( $bin, '-s', '--port', $port, '--protocol', $protocol, '-n', $db );
+            my @cmd = (
+                $bin,                        '-s',
+                '--default-command-version', $cmd_version,
+                '--port',                    $port,
+                '--protocol',                $protocol,
+                $preload ? $db : ( '-n', $db )
+            );
 
             exec @cmd;
             die "cannot execute $bin: $!";
