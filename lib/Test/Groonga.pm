@@ -12,8 +12,7 @@ sub create {
     my $class = shift;
     my %args = @_ == 1 ? %{ $_[0] } : @_;
     
-    my $command_version = delete $args{default_command_version} 
-      or Carp::croak("Missing params 'default_command_version'");
+    my $command_version = delete $args{default_command_version} || undef;
 
     my $protocol = delete $args{protocol}
       or Carp::croak("Missing params 'protocol'");
@@ -54,7 +53,7 @@ sub _get_test_tcp {
     
     my $preload  = $args{preload} || undef;
     my $protocol = $args{protocol} or die;
-    my $cmd_version = $args{default_command_version} or die;
+    my $cmd_version = $args{default_command_version};
  
     ### load data from dump file if you specified it.
     if ($preload and not -e $preload) {
@@ -80,7 +79,7 @@ sub _get_test_tcp {
             # -n : create a new db
             my @cmd = (
                 $bin,                        '-s',
-                '--default-command-version', $cmd_version,
+                $cmd_version ? ('--default-command-version', $cmd_version) : (),
                 '--port',                    $port,
                 '--protocol',                $protocol,
                 $preload ? $db : ( '-n', $db )
