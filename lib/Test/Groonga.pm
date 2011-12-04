@@ -6,7 +6,7 @@ use File::Temp ();
 use File::Which ();
 use Test::TCP 1.10;
 
-our $VERSION = '0.06';
+our $VERSION = '0.06x';
 
 sub create {
     my $class = shift;
@@ -21,43 +21,39 @@ sub create {
       or Carp::croak('protocol must be gqtp or http');
 
     my $preload = delete $args{preload} || undef;
+    my $preloads_ref = delete $args{preloads} || [];
+
+    warn "use preloads instead of preload. it's deprecated arguments."
+      if $preload;
+
+    if ( $preload and @{$preloads_ref} ) {
+        Carp::croak("couldn't use both 'preload' and 'preloads'...");
+    }
+
+    my @preloads = @{$preloads_ref};
+    @preloads = ($preload) if $preload; # this line will be remove.
 
     $class->_get_test_tcp(
         protocol                => $protocol,
-        preload                 => $preload,
+        preloads                => [@preloads],
         default_command_version => $command_version,
     );
 
 }
 
-sub gqtp {
-    my $class  = shift;
-    my %args   = @_ == 1 ? %{ $_[0] } : @_;
-    
-    warn 'deprecated..';
-    
-    $class->_get_test_tcp( %args, protocol => 'gqtp');
-}
-
-sub http {
-    my $class  = shift;
-    my %args   = @_ == 1 ? %{ $_[0] } : @_;
-    
-    warn 'deprecated..';
-    
-    $class->_get_test_tcp( %args, protocol => 'http');
-}
-
 sub _get_test_tcp {
     my ($class, %args) = @_;
     
-    my $preload  = $args{preload} || undef;
+    my $preloads = $args{preloads} || [];
     my $protocol = $args{protocol} or die;
     my $cmd_version = $args{default_command_version};
- 
+
     ### load data from dump file if you specified it.
-    if ($preload and not -e $preload) {
-        Carp::croak("Couldn't find file: $preload");
+    for my $preload ( @{$preloads} ) {
+        if ( $preload and not -e $preload ) {
+            warn $preload;
+            Carp::croak("Couldn't find file: $preload");
+        }
     }
 
     my $bin = _find_groonga_bin();
@@ -72,22 +68,28 @@ sub _get_test_tcp {
     return my $server = Test::TCP->new(
         code => sub {
             my $port = shift;
-            
-            `$bin --default-command-version $cmd_version -n $db < $preload` if $preload;
-            
+
+            # -n : create a new db and quit 
+            `$bin -n $db quit`;
+
+            for my $preload ( @{$preloads} ) {
+                warn `cat $preload`;
+                
+                warn my $return = `$bin $db < $preload`;
+            }
+
             # -s : server mode
-            # -n : create a new db
             my @cmd = (
                 $bin,                        '-s',
                 $cmd_version ? ('--default-command-version', $cmd_version) : (),
                 '--port',                    $port,
                 '--protocol',                $protocol,
-                $preload ? $db : ( '-n', $db )
+                $db,
             );
 
             exec @cmd;
             die "cannot execute $bin: $!";
-        },  
+        }, 
     ); 
 }
 
@@ -99,7 +101,7 @@ __END__
 
 =head1 NAME
 
-Test::Groonga - Server runner for testing Groonga full-text search engine
+Test::Groonga - Server runner for testing Groonga.
 
 =head1 SYNOPSIS
 
@@ -116,7 +118,7 @@ Test::Groonga - Server runner for testing Groonga full-text search engine
     }
 
     {
-        my $server = Test::Groonga->create(protocol=>'http', preload => 'foo.grn');
+        my $server = Test::Groonga->create(protocol=>'http', preloads => ['schema.grn','data.grn']);
         # testing
     }
 
@@ -129,14 +131,6 @@ Test::Groonga provides you temporary groonga server.
 =head2 create
 
 return Test::TCP instance as groonga server.
-
-=head2 gqtp
-
-=head2 http
-
-=head2 _get_test_tcp
-
-=head2 _find_groonga_bin
 
 =head1 AUTHOR
 

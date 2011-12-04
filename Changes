@@ -1,5 +1,10 @@
 Revision history for Perl extension Test::Groonga
 
+0.07    2011-12-04
+        - deleted deprecated interface 'http' and 'gqtp'.
+        - added new argument 'preloads'.
+        - warned 'preload' argument is deprecated. pleases use preloads insted of it.
+
 0.06    2011-11-22
         - added construction params 'default_command_version'.
 
@@ -7,13 +12,13 @@ Revision history for Perl extension Test::Groonga
         - copied after Perl Best Practice.
 
 0.04    2010-12-27
-        - add function to load dump file before testing.
+        - added function to load dump file before testing.
 
 0.03    2010-12-18
-        - use Test::TCP and change interface
+        - used Test::TCP and change interface
 
 0.02    2010-12-18
-        - refactoring
+        - refactored
 
 0.01    2010-12-09
         - original version
